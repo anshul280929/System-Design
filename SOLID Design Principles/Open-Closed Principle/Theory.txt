@@ -1,0 +1,141 @@
+🧱 O — Open/Closed Principle (OCP)
+📌 Definition
+
+👉 Software entities (classes, methods, modules) should be:
+
+OPEN for extension ✅
+CLOSED for modification ❌
+
+In simple words:
+
+You should be able to add new features without changing existing code.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine a mobile phone 📱
+
+You install new apps → extension ✅
+You don’t open the phone and change hardware every time → no modification ❌
+
+👉 Same idea in coding:
+
+Add new behavior without touching old code
+❌ Bad Example (Violating OCP)
+class PaymentService {
+
+    void pay(String type) {
+        if (type.equals("CreditCard")) {
+            System.out.println("Paying using Credit Card");
+        } else if (type.equals("UPI")) {
+            System.out.println("Paying using UPI");
+        }
+    }
+}
+🚨 Problem:
+Every time a new payment method comes (e.g., PayPal)
+👉 You must modify this class
+
+❌ Violates OCP
+
+✅ Good Example (Following OCP)
+Step 1: Create an interface
+interface Payment {
+    void pay();
+}
+Step 2: Implement different payment methods
+class CreditCardPayment implements Payment {
+    public void pay() {
+        System.out.println("Paying using Credit Card");
+    }
+}
+
+class UPIPayment implements Payment {
+    public void pay() {
+        System.out.println("Paying using UPI");
+    }
+}
+Step 3: Use abstraction
+class PaymentService {
+    void processPayment(Payment payment) {
+        payment.pay();
+    }
+}
+Step 4: Usage
+public class Main {
+    public static void main(String[] args) {
+        PaymentService service = new PaymentService();
+
+        service.processPayment(new CreditCardPayment());
+        service.processPayment(new UPIPayment());
+    }
+}
+✅ Now:
+To add new payment (e.g., PayPal)
+👉 Just create a new class:
+class PayPalPayment implements Payment {
+    public void pay() {
+        System.out.println("Paying using PayPal");
+    }
+}
+
+👉 No need to change existing code
+
+✔ Open for extension
+✔ Closed for modification
+
+🌍 Real-World Application
+Example: Notification System 📩
+
+Instead of:
+
+❌ One class handling:
+
+Email
+SMS
+Push notification
+
+👉 with if-else
+
+✅ Better design:
+
+Notification interface
+EmailNotification, SMSNotification, PushNotification
+
+👉 Add new types without touching old code
+
+🧠 When Should You Use OCP?
+
+Use OCP when:
+
+✔ You expect future changes/extensions
+✔ You want scalable systems
+✔ You want to avoid breaking existing code
+✔ You are using interfaces / abstract classes
+
+⚙️ Benefits
+✅ Easy to extend features
+✅ Safer code (no breaking old logic)
+✅ Better maintainability
+✅ Cleaner architecture
+⚠️ Common Mistake
+
+👉 Writing too many if-else or switch statements
+
+Bad smell:
+
+if(type == A) { }
+else if(type == B) { }
+else if(type == C) { }
+
+👉 Replace with polymorphism
+
+🎯 Interview One-Liner
+
+👉 “Classes should be open for extension but closed for modification, meaning new functionality should be added without altering existing code.”
+
+⚡ Memory Trick
+
+👉 OCP = Add new code, don’t change old code
+
+If you're ready, next is:
+👉 L — Liskov Substitution Principle (this one is tricky but very important)
