@@ -1,0 +1,125 @@
+🧱 S — Single Responsibility Principle (SRP)
+📌 Definition
+👉 A class should have only ONE reason to change.
+
+In simple words:
+A class should do only one job.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine you are in a school:
+
+One student is responsible for cleaning the board
+Another student is responsible for attendance
+
+If one student does everything, it becomes messy.
+
+👉 Same in coding:
+1 class = 1 responsibility
+
+❌ Bad Example (Violating SRP)
+class Student {
+    String name;
+
+    void saveToDatabase() {
+        System.out.println("Saving student to DB");
+    }
+
+    void generateReport() {
+        System.out.println("Generating report");
+    }
+}
+🚨 Problem:
+
+This class is doing 3 things:
+
+Holding data
+Saving to database
+Generating report
+
+👉 If database logic changes → class changes
+👉 If report format changes → class changes
+
+❌ Multiple reasons to change → Bad design
+
+✅ Good Example (Following SRP)
+class Student {
+    String name;
+}
+
+class StudentRepository {
+    void save(Student student) {
+        System.out.println("Saving student to DB");
+    }
+}
+
+class StudentReport {
+    void generate(Student student) {
+        System.out.println("Generating report");
+    }
+}
+✅ Now:
+Student → only data
+StudentRepository → DB logic
+StudentReport → report logic
+
+👉 Each class has one job only
+
+🌍 Real-World Application
+Example: Food Delivery App 🍔
+
+Instead of one big class:
+
+❌ Bad design:
+
+Order class handles:
+payment
+delivery
+notifications
+
+✅ Good design:
+
+OrderService → manages order
+PaymentService → handles payment
+DeliveryService → handles delivery
+NotificationService → sends updates
+
+👉 Each service has single responsibility
+
+🧠 When Should You Apply SRP?
+
+Use SRP when:
+
+✔ A class is becoming too large
+✔ A class has multiple functionalities
+✔ You notice multiple reasons to change
+✔ You want easy debugging & testing
+
+⚙️ Benefits
+✅ Easier to understand
+✅ Easier to maintain
+✅ Easier to test
+✅ Less bugs
+✅ Better modularity
+⚠️ Common Mistake
+
+👉 Over-splitting classes unnecessarily
+
+Bad:
+
+Too many tiny classes for no reason
+
+Balance is key:
+
+One responsibility ≠ one line of code
+
+🎯 Interview One-Liner
+
+👉 “A class should have only one reason to change, meaning it should have only one responsibility.”
+
+⚡ Memory Trick
+
+👉 SRP = Single Job Per Class
+
+If you’re ready, next we’ll go to:
+👉 O — Open/Closed Principle (very important for interviews + design patterns)
