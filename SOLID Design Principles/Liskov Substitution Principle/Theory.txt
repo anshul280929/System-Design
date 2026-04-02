@@ -1,0 +1,142 @@
+🧱 L — Liskov Substitution Principle (LSP)
+📌 Definition
+
+👉 Objects of a subclass should be replaceable with objects of the superclass without breaking the program.
+
+In simple words:
+
+If B is a child of A, then we should be able to use B instead of A without any problems.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine:
+
+You have a function that works with a Bird 🐦
+It expects the bird to fly
+
+Now if you pass a Penguin 🐧
+👉 It cannot fly ❌
+👉 Program breaks
+
+So:
+
+Not every "Bird" behaves like a typical bird
+
+👉 This breaks LSP
+
+❌ Bad Example (Violating LSP)
+class Bird {
+    void fly() {
+        System.out.println("Flying");
+    }
+}
+
+class Penguin extends Bird {
+    void fly() {
+        throw new UnsupportedOperationException("Penguins can't fly");
+    }
+}
+🚨 Problem:
+Penguin IS-A Bird
+But it cannot do what Bird is expected to do
+
+👉 If we replace Bird with Penguin → program fails
+
+❌ Violates LSP
+
+✅ Good Example (Following LSP)
+Step 1: Separate behavior properly
+class Bird {
+    void eat() {
+        System.out.println("Bird is eating");
+    }
+}
+
+class FlyingBird extends Bird {
+    void fly() {
+        System.out.println("Flying");
+    }
+}
+
+class Sparrow extends FlyingBird { }
+
+class Penguin extends Bird { }
+Step 2: Use correctly
+public class Main {
+    public static void main(String[] args) {
+        FlyingBird bird = new Sparrow();
+        bird.fly();   // works perfectly
+
+        Bird penguin = new Penguin();
+        penguin.eat(); // also works
+    }
+}
+✅ Now:
+Only flying birds have fly()
+No wrong expectations
+No runtime errors
+
+✔ LSP satisfied
+
+🌍 Real-World Application
+Example: Payment System 💳
+
+Suppose:
+
+class Payment {
+    void pay() { }
+}
+
+Now:
+
+class CreditCardPayment extends Payment { }
+class CashPayment extends Payment { }
+
+👉 Both should behave correctly when used as Payment
+
+❌ If one throws unexpected error → LSP broken
+✅ All subclasses should behave consistently
+
+🧠 When Should You Use LSP?
+
+Use LSP when:
+
+✔ Designing inheritance hierarchies
+✔ Creating base classes / interfaces
+✔ You want reliable polymorphism
+✔ Avoiding runtime surprises
+
+⚙️ Rules to Follow (Important)
+
+✔ Child class should not break parent behavior
+✔ Do not throw unexpected exceptions
+✔ Do not change method meaning
+✔ Follow “is-a” relationship properly
+
+⚠️ Common Mistake
+
+👉 Using inheritance just for reuse
+
+Example:
+
+Making Penguin extends Bird when behavior differs
+
+👉 Instead use composition or better hierarchy
+
+🎯 Interview One-Liner
+
+👉 “Subclasses should be substitutable for their base classes without altering the correctness of the program.”
+
+⚡ Memory Trick
+
+👉 LSP = Child should behave like Parent
+
+🔥 Quick Intuition
+
+If this breaks → ❌ LSP
+
+Parent p = new Child();
+p.someMethod();  // should ALWAYS work correctly
+
+If you're ready, next is:
+👉 I — Interface Segregation Principle (very practical for clean APIs)
