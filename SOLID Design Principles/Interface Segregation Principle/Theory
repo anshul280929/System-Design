@@ -1,0 +1,146 @@
+🧱 I — Interface Segregation Principle (ISP)
+📌 Definition
+
+👉 Clients should not be forced to depend on methods they do not use.
+
+In simple words:
+
+Don’t make a class implement things it doesn’t need.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine a remote control 🎮
+
+It has buttons for TV, AC, Lights, Fan, Music… EVERYTHING 😵
+
+But you only want to control the TV
+
+👉 Why should you deal with all other buttons?
+
+So instead:
+
+Have a separate remote for each device
+
+👉 Same idea in coding:
+Small, specific interfaces are better than one big interface
+
+❌ Bad Example (Violating ISP)
+interface Worker {
+    void work();
+    void eat();
+}
+
+Now:
+
+class Robot implements Worker {
+    public void work() {
+        System.out.println("Robot working");
+    }
+
+    public void eat() {
+        throw new UnsupportedOperationException("Robot doesn't eat");
+    }
+}
+🚨 Problem:
+Robot does not need eat()
+But still forced to implement it
+
+❌ Violates ISP
+
+✅ Good Example (Following ISP)
+Step 1: Split interfaces
+interface Workable {
+    void work();
+}
+
+interface Eatable {
+    void eat();
+}
+Step 2: Implement only what is needed
+class Human implements Workable, Eatable {
+    public void work() {
+        System.out.println("Human working");
+    }
+
+    public void eat() {
+        System.out.println("Human eating");
+    }
+}
+
+class Robot implements Workable {
+    public void work() {
+        System.out.println("Robot working");
+    }
+}
+✅ Now:
+Human → works + eats
+Robot → only works
+
+✔ No unnecessary methods
+✔ Clean design
+
+🌍 Real-World Application
+Example: Multi-Feature App 📱
+
+Instead of one big interface:
+
+interface AppFeatures {
+    void chat();
+    void videoCall();
+    void payment();
+    void gaming();
+}
+
+👉 Not every app needs all features
+
+✅ Better design:
+
+ChatFeature
+PaymentFeature
+GamingFeature
+
+👉 Apps implement only what they need
+
+🧠 When Should You Use ISP?
+
+Use ISP when:
+
+✔ Interfaces are becoming too large
+✔ Classes are forced to implement unused methods
+✔ You see empty methods / exceptions like UnsupportedOperationException
+✔ You want clean and modular APIs
+
+⚙️ Benefits
+✅ Cleaner code
+✅ Better readability
+✅ Easy maintenance
+✅ Less bugs
+✅ More flexibility
+⚠️ Common Mistake
+
+👉 Creating “God Interface” (very big interface)
+
+Bad sign:
+
+Too many methods
+Not all classes use all methods
+
+👉 Always break into smaller interfaces
+
+🎯 Interview One-Liner
+
+👉 “Interfaces should be specific so that implementing classes are not forced to implement methods they do not use.”
+
+⚡ Memory Trick
+
+👉 ISP = Don’t force unnecessary methods
+
+🔥 Quick Intuition
+
+❌ Bad:
+
+Robot implements Worker → forced to eat()
+
+✅ Good:
+
+Robot implements Workable only
