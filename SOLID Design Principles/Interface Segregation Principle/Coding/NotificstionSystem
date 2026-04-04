@@ -1,0 +1,79 @@
+interface NotificationChannel {
+    void send(NotificationRequest request);
+}
+
+class NotificationRequest {
+    private final String recipient;
+    private final String message;
+
+    public NotificationRequest(String recipient, String message) {
+        this.recipient = recipient;
+        this.message = message;
+    }
+
+    public String getRecipient() { return recipient; }
+    public String getMessage() { return message; }
+}
+
+interface EmailNotification extends NotificationChannel {}
+interface SMSNotification extends NotificationChannel {}
+interface PushNotification extends NotificationChannel {}
+
+class EmailNotifier implements EmailNotification {
+    public void send(NotificationRequest request) {
+        System.out.println("Email sent to " + request.getRecipient());
+    }
+}
+
+class SMSNotifier implements SMSNotification {
+    public void send(NotificationRequest request) {
+        System.out.println("SMS sent to " + request.getRecipient());
+    }
+}
+
+class PushNotifier implements PushNotification {
+    public void send(NotificationRequest request) {
+        System.out.println("Push sent to " + request.getRecipient());
+    }
+}
+
+import java.util.Map;
+
+class NotificationDispatcher {
+
+    private final Map<String, NotificationChannel> channels;
+
+    public NotificationDispatcher(Map<String, NotificationChannel> channels) {
+        this.channels = channels;
+    }
+
+    public void dispatch(String type, NotificationRequest request) {
+        NotificationChannel channel = channels.get(type);
+
+        if (channel == null) {
+            throw new IllegalArgumentException("Unsupported notification type");
+        }
+
+        channel.send(request);
+    }
+}
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Map<String, NotificationChannel> channelMap = new HashMap<>();
+        channelMap.put("EMAIL", new EmailNotifier());
+        channelMap.put("SMS", new SMSNotifier());
+        channelMap.put("PUSH", new PushNotifier());
+
+        NotificationDispatcher dispatcher = new NotificationDispatcher(channelMap);
+
+        NotificationRequest request = new NotificationRequest("user@example.com", "Hello!");
+
+        dispatcher.dispatch("EMAIL", request);
+        dispatcher.dispatch("SMS", request);
+    }
+}
