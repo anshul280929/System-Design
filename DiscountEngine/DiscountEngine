@@ -1,0 +1,98 @@
+import java.util.List;
+class Cart {
+    private final double totalAmount;
+    private final int totalItems;
+    private final boolean isPremiumUser;
+
+    public Cart(double totalAmount, int totalItems, boolean isPremiumUser) {
+        this.totalAmount = totalAmount;
+        this.totalItems = totalItems;
+        this.isPremiumUser = isPremiumUser;
+    }
+
+    public double getTotalAmount() { return totalAmount; }
+    public int getTotalItems() { return totalItems; }
+    public boolean isPremiumUser() { return isPremiumUser; }
+}
+
+interface Discount {
+    boolean isApplicable(Cart cart);
+    double apply(Cart cart);
+}
+
+class PercentageDiscount implements Discount {
+
+    private final double percentage;
+
+    public PercentageDiscount(double percentage) {
+        this.percentage = percentage;
+    }
+
+    public boolean isApplicable(Cart cart) {
+        return true;
+    }
+
+    public double apply(Cart cart) {
+        return cart.getTotalAmount() * (percentage / 100);
+    }
+}
+
+class FlatDiscount implements Discount {
+
+    private final double amount;
+    private final double minCartValue;
+
+    public FlatDiscount(double amount, double minCartValue) {
+        this.amount = amount;
+        this.minCartValue = minCartValue;
+    }
+
+    public boolean isApplicable(Cart cart) {
+        return cart.getTotalAmount() >= minCartValue;
+    }
+
+    public double apply(Cart cart) {
+        return amount;
+    }
+}
+
+class BuyOneGetOneFree implements Discount {
+
+    public boolean isApplicable(Cart cart) {
+        return cart.getTotalItems() >= 2;
+    }
+
+    public double apply(Cart cart) {
+        return cart.getTotalAmount() / 2;
+    }
+}
+
+
+
+class DiscountEngine {
+
+    public double calculateFinalPrice(Cart cart, List<Discount> discounts) {
+
+        double totalDiscount = 0;
+
+        for (Discount discount : discounts) {
+            if (discount.isApplicable(cart)) {
+                totalDiscount += discount.apply(cart);
+            }
+        }
+
+        return cart.getTotalAmount() - totalDiscount;
+    }
+}
+Cart cart = new Cart(1000, 3, true);
+
+List<Discount> discounts = List.of(
+        new PercentageDiscount(10),
+        new FlatDiscount(50, 500),
+        new BuyOneGetOneFree()
+);
+
+DiscountEngine engine = new DiscountEngine();
+double finalPrice = engine.calculateFinalPrice(cart, discounts);
+
+System.out.println(finalPrice);
