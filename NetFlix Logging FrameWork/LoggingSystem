@@ -1,0 +1,63 @@
+class LogEvent {
+    private final LogLevel level;
+    private final String message;
+    private final long timestamp;
+
+    public LogEvent(LogLevel level, String message) {
+        this.level = level;
+        this.message = message;
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    public LogLevel getLevel() { return level; }
+    public String getMessage() { return message; }
+    public long getTimestamp() { return timestamp; }
+}
+
+enum LogLevel {
+    DEBUG, INFO, WARN, ERROR
+}
+
+interface Logger {
+    boolean supports(LogLevel level);
+    void log(LogEvent event);
+}
+
+class ConsoleLogger implements Logger {
+
+    public boolean supports(LogLevel level) {
+        return level != LogLevel.DEBUG;
+    }
+
+    public void log(LogEvent event) {
+        System.out.println("[CONSOLE] " + event.getMessage());
+    }
+}
+
+class FileLogger implements Logger {
+
+    public boolean supports(LogLevel level) {
+        return true;
+    }
+
+    public void log(LogEvent event) {
+        System.out.println("[FILE] " + event.getMessage());
+    }
+}
+
+class LoggingSystem {
+
+    private final List<Logger> loggers;
+
+    public LoggingSystem(List<Logger> loggers) {
+        this.loggers = loggers;
+    }
+
+    public void log(LogEvent event) {
+        for (Logger logger : loggers) {
+            if (logger.supports(event.getLevel())) {
+                logger.log(event);
+            }
+        }
+    }
+}
