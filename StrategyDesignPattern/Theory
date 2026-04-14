@@ -1,0 +1,213 @@
+🎯 Strategy Design Pattern
+📌 Definition
+
+👉 Strategy Pattern allows you to define a family of algorithms, put each of them in separate classes, and make them interchangeable at runtime.
+
+In simple words:
+
+You can change behavior (strategy) of an object without changing its code.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine you are going to college:
+
+Sometimes you go by Bike 🏍️
+Sometimes by Bus 🚌
+Sometimes by Walking 🚶
+
+👉 Destination is same
+👉 Only strategy (way of travel) changes
+
+That’s Strategy Pattern.
+
+❌ Without Strategy Pattern (Bad Design)
+class Travel {
+    void go(String mode) {
+        if (mode.equals("bike")) {
+            System.out.println("Going by bike");
+        } else if (mode.equals("bus")) {
+            System.out.println("Going by bus");
+        }
+    }
+}
+🚨 Problem:
+Every new mode → modify class
+Violates Open/Closed Principle
+Not scalable
+✅ With Strategy Pattern (Good Design)
+Step 1: Create Strategy Interface
+interface TravelStrategy {
+    void travel();
+}
+Step 2: Create Different Strategies
+class BikeStrategy implements TravelStrategy {
+    public void travel() {
+        System.out.println("Travel by Bike");
+    }
+}
+
+class BusStrategy implements TravelStrategy {
+    public void travel() {
+        System.out.println("Travel by Bus");
+    }
+}
+
+class WalkStrategy implements TravelStrategy {
+    public void travel() {
+        System.out.println("Travel by Walking");
+    }
+}
+Step 3: Context Class
+class Navigator {
+    private TravelStrategy strategy;
+
+    Navigator(TravelStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    void setStrategy(TravelStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    void startJourney() {
+        strategy.travel();
+    }
+}
+Step 4: Usage
+public class Main {
+    public static void main(String[] args) {
+        Navigator nav = new Navigator(new BikeStrategy());
+        nav.startJourney();
+
+        nav.setStrategy(new BusStrategy());
+        nav.startJourney();
+    }
+}
+✅ Result:
+Behavior changes at runtime
+No modification of existing code
+Clean & scalable
+🌍 Real-World Applications
+1️⃣ Payment System 💳
+Strategy = Payment Method
+UPI / Card / Wallet
+2️⃣ Sorting Algorithms
+Strategy = sorting logic
+QuickSort / MergeSort
+3️⃣ Navigation Apps 🗺️
+Strategy = route
+Fastest / Shortest / No toll
+🧠 When to Use Strategy Pattern?
+
+Use it when:
+
+✔ You have multiple ways to perform a task
+✔ You see many if-else or switch cases
+✔ You want runtime flexibility
+✔ You want to follow Open/Closed Principle
+
+⚙️ Benefits
+✅ Removes if-else clutter
+✅ Easy to extend
+✅ Runtime flexibility
+✅ Cleaner code
+⚠️ Drawback
+❌ More number of classes
+❌ Slight complexity increase
+🧱 Composition Over Inheritance (Very Important)
+📌 Definition
+
+👉 Favor using objects (composition) instead of inheriting classes to reuse behavior.
+
+In simple words:
+
+Instead of saying “is-a”, prefer “has-a”
+
+🧠 Simple Intuition
+Inheritance
+
+👉 Dog is-a Animal
+
+Composition
+
+👉 Car has-a Engine
+
+❌ Problem with Inheritance
+class Bird {
+    void fly() { }
+}
+
+class Penguin extends Bird { } // ❌ problem
+
+👉 Penguin cannot fly
+👉 Breaks Liskov Substitution Principle
+
+✅ Solution using Composition
+interface Flyable {
+    void fly();
+}
+
+class FlyWithWings implements Flyable {
+    public void fly() {
+        System.out.println("Flying with wings");
+    }
+}
+
+class Bird {
+    Flyable flyBehavior;
+
+    Bird(Flyable flyBehavior) {
+        this.flyBehavior = flyBehavior;
+    }
+
+    void performFly() {
+        flyBehavior.fly();
+    }
+}
+Usage
+Bird sparrow = new Bird(new FlyWithWings());
+sparrow.performFly();
+
+👉 Now behavior is flexible
+
+🎯 Why Composition Over Inheritance?
+1️⃣ Flexibility
+
+👉 Change behavior at runtime
+
+2️⃣ Avoid Tight Coupling
+
+👉 Classes are independent
+
+3️⃣ Follows SOLID
+✔ OCP
+✔ LSP
+✔ DIP
+4️⃣ Reusability
+
+👉 Same behavior reused in multiple classes
+
+⚡ Key Difference
+Inheritance	Composition
+IS-A relationship	HAS-A relationship
+Tight coupling	Loose coupling
+Fixed behavior	Flexible behavior
+Compile-time	Runtime change possible
+🔥 Strategy Pattern = Composition in Action
+
+👉 Strategy pattern is a perfect example of composition
+
+Navigator HAS-A TravelStrategy
+
+👉 That’s why:
+
+Behavior can change dynamically
+Code stays clean
+🎯 Interview One-Liner
+
+👉 “Strategy pattern uses composition to allow selecting algorithms at runtime instead of hardcoding them using inheritance.”
+
+⚡ Memory Trick
+
+👉 Strategy = Change behavior easily
+👉 Composition = Plug & Play behavior
