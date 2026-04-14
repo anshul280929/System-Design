@@ -1,0 +1,104 @@
+interface DataSource {
+    List<Map<String, Object>> fetchData();
+}
+
+class DatabaseSource implements DataSource {
+    public List<Map<String, Object>> fetchData() {
+        System.out.println("Fetching data from DB...");
+        return List.of(Map.of("name", "Anshul", "sales", 1000));
+    }
+}
+
+class APISource implements DataSource {
+    public List<Map<String, Object>> fetchData() {
+        System.out.println("Fetching data from API...");
+        return List.of(Map.of("name", "Rahul", "sales", 1500));
+    }
+}
+
+interface DataTransformer {
+    List<Map<String, Object>> transform(List<Map<String, Object>> data);
+}
+
+class SalesAggregator implements DataTransformer {
+    public List<Map<String, Object>> transform(List<Map<String, Object>> data) {
+        int total = data.stream()
+                .mapToInt(d -> (int) d.get("sales"))
+                .sum();
+
+        return List.of(Map.of("total_sales", total));
+    }
+}
+
+class IdentityTransformer implements DataTransformer {
+    public List<Map<String, Object>> transform(List<Map<String, Object>> data) {
+        return data;
+    }
+}
+
+interface ReportFormatter {
+    String format(List<Map<String, Object>> data);
+}
+
+class JSONFormatter implements ReportFormatter {
+    public String format(List<Map<String, Object>> data) {
+        return "JSON: " + data.toString();
+    }
+}
+
+class CSVFormatter implements ReportFormatter {
+    public String format(List<Map<String, Object>> data) {
+        StringBuilder sb = new StringBuilder();
+
+        for (Map<String, Object> row : data) {
+            sb.append(String.join(",", row.values()
+                    .stream()
+                    .map(Object::toString)
+                    .toList()));
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+}
+
+class ChartFormatter implements ReportFormatter {
+    public String format(List<Map<String, Object>> data) {
+        return "Chart Representation (bar/line)";
+    }
+}
+
+class ReportGenerator {
+
+    private final DataSource dataSource;
+    private final DataTransformer transformer;
+    private final ReportFormatter formatter;
+
+    public ReportGenerator(DataSource dataSource,
+                           DataTransformer transformer,
+                           ReportFormatter formatter) {
+        this.dataSource = dataSource;
+        this.transformer = transformer;
+        this.formatter = formatter;
+    }
+
+    public String generateReport() {
+        List<Map<String, Object>> rawData = dataSource.fetchData();
+        List<Map<String, Object>> processed = transformer.transform(rawData);
+        return formatter.format(processed);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        DataSource source = new DatabaseSource();
+        DataTransformer transformer = new SalesAggregator();
+        ReportFormatter formatter = new JSONFormatter();
+
+        ReportGenerator generator =
+                new ReportGenerator(source, transformer, formatter);
+
+        System.out.println(generator.generateReport());
+    }
+}
