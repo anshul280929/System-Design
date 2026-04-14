@@ -1,0 +1,77 @@
+interface PaymentStrategy {
+    void pay(double amount);
+}
+
+class CreditCardPayment implements PaymentStrategy {
+    private String cardNumber;
+
+    CreditCardPayment(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public void pay(double amount) {
+        System.out.println("Paid ₹" + amount + " using Credit Card: " + cardNumber);
+    }
+}
+
+class UPIPayment implements PaymentStrategy {
+    private String upiId;
+
+    UPIPayment(String upiId) {
+        this.upiId = upiId;
+    }
+
+    public void pay(double amount) {
+        System.out.println("Paid ₹" + amount + " using UPI: " + upiId);
+    }
+}
+
+class PayPalPayment implements PaymentStrategy {
+    private String email;
+
+    PayPalPayment(String email) {
+        this.email = email;
+    }
+
+    public void pay(double amount) {
+        System.out.println("Paid ₹" + amount + " using PayPal: " + email);
+    }
+}
+
+class PaymentContext {
+    private PaymentStrategy strategy;
+
+    // Constructor Injection
+    PaymentContext(PaymentStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    // Change strategy at runtime
+    public void setStrategy(PaymentStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public void processPayment(double amount) {
+        strategy.pay(amount);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        // User selects Credit Card
+        PaymentContext context = new PaymentContext(
+            new CreditCardPayment("1234-5678-9999")
+        );
+        context.processPayment(5000);
+
+        // User switches to UPI
+        context.setStrategy(new UPIPayment("anshul@upi"));
+        context.processPayment(2000);
+
+        // User switches to PayPal
+        context.setStrategy(new PayPalPayment("anshul@gmail.com"));
+        context.processPayment(3000);
+    }
+}
+
