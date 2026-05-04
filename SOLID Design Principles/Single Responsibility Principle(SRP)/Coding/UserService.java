@@ -1,3 +1,4 @@
+//User class represents a user in the system
 class User {
     String name;
     int age;
@@ -11,7 +12,7 @@ class User {
         this.password = password;
     }
 }
-
+//UserValidator class is responsible for validating user data
 class UserValidator {
     public void validate(User user) {
         if (user.name == null || user.name.isEmpty()) {

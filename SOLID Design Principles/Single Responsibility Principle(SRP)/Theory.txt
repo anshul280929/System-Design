@@ -120,6 +120,3 @@ One responsibility ≠ one line of code
 ⚡ Memory Trick
 
 👉 SRP = Single Job Per Class
-
-If you’re ready, next we’ll go to:
-👉 O — Open/Closed Principle (very important for interviews + design patterns)
