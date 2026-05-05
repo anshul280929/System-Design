@@ -137,6 +137,3 @@ If this breaks → ❌ LSP
 
 Parent p = new Child();
 p.someMethod();  // should ALWAYS work correctly
-
-If you're ready, next is:
-👉 I — Interface Segregation Principle (very practical for clean APIs)
