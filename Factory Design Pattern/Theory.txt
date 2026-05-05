@@ -1,0 +1,238 @@
+🏭 Factory Design Pattern (Java)
+📌 What it is
+
+👉 Factory Pattern provides an interface to create objects, but lets subclasses or helper classes decide which object to create.
+
+In simple words:
+
+Don’t use new everywhere. Centralize object creation.
+
+🧠 Think Like a 10-Year-Old
+
+You go to an ice-cream shop 🍦:
+
+You ask for “chocolate”
+You don’t make it yourself
+👉 Shop (factory) creates it for you
+1️⃣ Simple Factory (Static Factory)
+
+Not a formal GoF pattern, but very common.
+
+🎯 Idea
+
+One class decides which object to create based on input.
+
+❌ Without Factory
+class Main {
+    public static void main(String[] args) {
+        Vehicle v = new Car();  // tightly coupled
+        v.drive();
+    }
+}
+
+👉 If you change to Bike → modify code ❌
+
+✅ With Simple Factory
+Step 1: Product Interface
+interface Vehicle {
+    void drive();
+}
+Step 2: Concrete Products
+class Car implements Vehicle {
+    public void drive() {
+        System.out.println("Driving Car");
+    }
+}
+
+class Bike implements Vehicle {
+    public void drive() {
+        System.out.println("Riding Bike");
+    }
+}
+Step 3: Factory Class
+class VehicleFactory {
+
+    public static Vehicle getVehicle(String type) {
+        if (type.equalsIgnoreCase("car")) {
+            return new Car();
+        } else if (type.equalsIgnoreCase("bike")) {
+            return new Bike();
+        }
+        return null;
+    }
+}
+Step 4: Usage
+public class Main {
+    public static void main(String[] args) {
+        Vehicle v = VehicleFactory.getVehicle("car");
+        v.drive();
+    }
+}
+⚠️ Problem
+Uses if-else
+Violates Open/Closed Principle (needs modification for new types)
+2️⃣ Factory Method Pattern
+📌 Definition
+
+👉 Define an interface for creating objects, but let subclasses decide which class to instantiate.
+
+🎯 Idea
+
+👉 Move object creation to subclasses instead of one big factory
+
+✅ Example: Notification System
+Step 1: Product Interface
+interface Notification {
+    void notifyUser();
+}
+Step 2: Concrete Products
+class EmailNotification implements Notification {
+    public void notifyUser() {
+        System.out.println("Sending Email");
+    }
+}
+
+class SMSNotification implements Notification {
+    public void notifyUser() {
+        System.out.println("Sending SMS");
+    }
+}
+Step 3: Creator (Factory Class)
+abstract class NotificationFactory {
+    abstract Notification createNotification();
+}
+Step 4: Concrete Factories
+class EmailFactory extends NotificationFactory {
+    Notification createNotification() {
+        return new EmailNotification();
+    }
+}
+
+class SMSFactory extends NotificationFactory {
+    Notification createNotification() {
+        return new SMSNotification();
+    }
+}
+Step 5: Usage
+public class Main {
+    public static void main(String[] args) {
+        NotificationFactory factory = new EmailFactory();
+        Notification n = factory.createNotification();
+        n.notifyUser();
+    }
+}
+✅ Benefits
+
+✔ No if-else
+✔ Follows Open/Closed Principle
+✔ Easy to extend
+
+3️⃣ Abstract Factory Pattern
+📌 Definition
+
+👉 Provides an interface to create families of related objects without specifying their concrete classes.
+
+🧠 Think Simply
+
+👉 Factory of factories
+
+🎯 Example: UI Theme System (Light / Dark)
+
+We create:
+
+Button
+Checkbox
+👉 Both must match theme
+Step 1: Abstract Products
+interface Button {
+    void render();
+}
+
+interface Checkbox {
+    void check();
+}
+Step 2: Concrete Products
+class LightButton implements Button {
+    public void render() {
+        System.out.println("Light Button");
+    }
+}
+
+class DarkButton implements Button {
+    public void render() {
+        System.out.println("Dark Button");
+    }
+}
+class LightCheckbox implements Checkbox {
+    public void check() {
+        System.out.println("Light Checkbox");
+    }
+}
+
+class DarkCheckbox implements Checkbox {
+    public void check() {
+        System.out.println("Dark Checkbox");
+    }
+}
+Step 3: Abstract Factory
+interface UIFactory {
+    Button createButton();
+    Checkbox createCheckbox();
+}
+Step 4: Concrete Factories
+class LightThemeFactory implements UIFactory {
+    public Button createButton() {
+        return new LightButton();
+    }
+
+    public Checkbox createCheckbox() {
+        return new LightCheckbox();
+    }
+}
+class DarkThemeFactory implements UIFactory {
+    public Button createButton() {
+        return new DarkButton();
+    }
+
+    public Checkbox createCheckbox() {
+        return new DarkCheckbox();
+    }
+}
+Step 5: Usage
+public class Main {
+    public static void main(String[] args) {
+
+        UIFactory factory = new DarkThemeFactory();
+
+        Button btn = factory.createButton();
+        Checkbox cb = factory.createCheckbox();
+
+        btn.render();
+        cb.check();
+    }
+}
+✅ Benefits
+
+✔ Ensures consistent object families
+✔ No mixing (e.g., Light button + Dark checkbox)
+✔ Highly scalable
+
+🔥 Key Differences
+Pattern	Idea	Problem it solves
+Simple Factory	One class creates objects	Centralizes creation
+Factory Method	Subclasses create objects	Removes if-else
+Abstract Factory	Creates related object families	Ensures consistency
+🧠 When to Use What?
+Use Simple Factory → small project
+Use Factory Method → when object creation varies
+Use Abstract Factory → when dealing with multiple related objects
+⚡ Memory Trick
+
+👉 Factory = Object Creation Control
+👉 Factory Method = Subclass decides
+👉 Abstract Factory = Group of objects
+
+🎯 Interview One-Liner
+
+👉
+“Factory pattern abstracts object creation, Factory Method delegates creation to subclasses, and Abstract Factory creates families of related objects.”
