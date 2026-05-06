@@ -1,0 +1,322 @@
+🧱 Singleton Design Pattern
+📌 Definition
+
+👉 Singleton Pattern ensures that only ONE object of a class is created in the entire application and provides a global access point to it.
+
+In simple words:
+
+Only one instance of the class should exist.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine your school has:
+
+only one principal 👨‍🏫
+everyone talks to the same principal
+
+You don’t create:
+
+Principal1
+Principal2
+Principal3
+
+👉 Only ONE principal object exists.
+
+That is Singleton Pattern.
+
+🎯 Why Do We Need Singleton?
+
+Some objects should exist only once:
+
+✔ Database Connection
+✔ Logger
+✔ Configuration Manager
+✔ Cache Manager
+✔ Thread Pool
+
+Because multiple objects may:
+
+waste memory
+create inconsistency
+cause synchronization problems
+❌ Normal Object Creation
+class SchoolPrincipal { }
+
+public class Main {
+    public static void main(String[] args) {
+
+        SchoolPrincipal p1 = new SchoolPrincipal();
+        SchoolPrincipal p2 = new SchoolPrincipal();
+
+        System.out.println(p1 == p2); // false
+    }
+}
+
+👉 Two different objects created ❌
+
+✅ Basic Singleton Pattern
+Steps:
+Make constructor private
+Create static object
+Provide public method to access it
+Example
+class Singleton {
+
+    // Step 1: Create single object
+    private static Singleton instance = new Singleton();
+
+    // Step 2: Private constructor
+    private Singleton() {
+        System.out.println("Object Created");
+    }
+
+    // Step 3: Global access method
+    public static Singleton getInstance() {
+        return instance;
+    }
+}
+Usage
+public class Main {
+    public static void main(String[] args) {
+
+        Singleton s1 = Singleton.getInstance();
+        Singleton s2 = Singleton.getInstance();
+
+        System.out.println(s1 == s2);
+    }
+}
+Output
+Object Created
+true
+
+👉 Both references point to SAME object
+
+🌟 Eager Initialization
+📌 Meaning
+
+👉 Object is created immediately when class loads
+
+Example
+class Singleton {
+
+    private static Singleton instance = new Singleton();
+
+    private Singleton() { }
+
+    public static Singleton getInstance() {
+        return instance;
+    }
+}
+✅ Advantages
+
+✔ Simple
+✔ Thread-safe automatically
+✔ Easy implementation
+
+❌ Disadvantages
+
+❌ Object created even if not used
+❌ Wastes memory sometimes
+
+🌟 Lazy Initialization
+📌 Meaning
+
+👉 Object created ONLY when needed
+
+Example
+class Singleton {
+
+    private static Singleton instance;
+
+    private Singleton() { }
+
+    public static Singleton getInstance() {
+
+        if (instance == null) {
+            instance = new Singleton();
+        }
+
+        return instance;
+    }
+}
+✅ Advantages
+
+✔ Saves memory
+✔ Object created only when required
+
+❌ Problem
+
+❌ Not thread-safe
+
+In multithreading:
+
+Two threads may create two objects simultaneously
+🧵 What is Thread-Safe?
+📌 Definition
+
+👉 A piece of code is thread-safe if multiple threads can access it safely without causing problems.
+
+🧠 Think Simply
+
+Imagine:
+
+2 people trying to withdraw money from same ATM account simultaneously
+
+If system is not controlled:
+
+both may withdraw incorrectly
+
+👉 That’s a thread issue.
+
+❌ Problem in Lazy Singleton
+
+Suppose:
+
+if(instance == null)
+
+Two threads check at same time:
+
+both see null
+both create objects
+
+❌ Singleton broken
+
+✅ Thread-Safe Singleton
+Method 1: Synchronized Method
+class Singleton {
+
+    private static Singleton instance;
+
+    private Singleton() { }
+
+    public static synchronized Singleton getInstance() {
+
+        if (instance == null) {
+            instance = new Singleton();
+        }
+
+        return instance;
+    }
+}
+✅ Benefit
+
+✔ Only one thread enters method at a time
+
+❌ Drawback
+
+❌ Slow performance
+Because every call gets locked
+
+🚀 Best Approach: Double-Checked Locking
+📌 Optimized Thread-Safe Singleton
+class Singleton {
+
+    private static volatile Singleton instance;
+
+    private Singleton() { }
+
+    public static Singleton getInstance() {
+
+        if (instance == null) {
+
+            synchronized (Singleton.class) {
+
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+
+        return instance;
+    }
+}
+🧠 Why Double Check?
+
+First check:
+
+if(instance == null)
+
+Avoids unnecessary locking
+
+Second check inside synchronized:
+
+if(instance == null)
+
+Ensures only one object created
+
+🌟 Best Singleton in Java (Interview Favorite)
+Bill Pugh Singleton
+class Singleton {
+
+    private Singleton() { }
+
+    private static class Helper {
+        private static final Singleton INSTANCE =
+                new Singleton();
+    }
+
+    public static Singleton getInstance() {
+        return Helper.INSTANCE;
+    }
+}
+✅ Why Best?
+
+✔ Lazy initialization
+✔ Thread-safe
+✔ High performance
+✔ No synchronization overhead
+
+🔥 Real-World Example
+Database Connection Manager
+class DatabaseConnection {
+
+    private static DatabaseConnection instance;
+
+    private DatabaseConnection() { }
+
+    public static synchronized DatabaseConnection getInstance() {
+
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+
+        return instance;
+    }
+}
+
+👉 Entire application uses ONE DB connection manager
+
+🎯 Difference: Eager vs Lazy
+Feature	Eager	Lazy
+Object Creation	At class loading	When needed
+Memory Usage	Higher	Lower
+Thread Safety	Yes	No (by default)
+Performance	Faster access	Slight delay first time
+⚡ Memory Trick
+
+👉 Singleton = One object only
+👉 Eager = Create early
+👉 Lazy = Create later
+👉 Thread-safe = Safe for multiple threads
+
+🎯 Interview One-Liner
+
+👉
+“Singleton pattern ensures only one instance of a class exists and provides a global access point to it.”
+
+🚨 Common Interview Questions
+Q1: Why constructor private?
+
+👉 Prevent external object creation
+
+Q2: Why use static instance?
+
+👉 Shared across all objects/classes
+
+Q3: Which Singleton is best?
+
+👉 Bill Pugh Singleton
+
+Q4: Where is Singleton used?
+
+👉 Logging, DB connection, configuration, caching
