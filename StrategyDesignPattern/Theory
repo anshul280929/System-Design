@@ -1,7 +1,8 @@
 🎯 Strategy Design Pattern
 📌 Definition
 
-👉 Strategy Pattern allows you to define a family of algorithms, put each of them in separate classes, and make them interchangeable at runtime.
+👉 Strategy Pattern allows you to define a family of algorithms, put each of them in separate classes, and make them 
+interchangeable at runtime.
 
 In simple words:
 
