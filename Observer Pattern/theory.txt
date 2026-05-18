@@ -23,12 +23,14 @@ Subscribers = Observers
 This is exactly the Observer Pattern.
 
 🎯 Main Components
-Component	Meaning
-Subject	Sends updates
-Observer	Receives updates
-Concrete Subject	Actual object being observed
-Concrete Observer	Actual subscribers/listeners
+Component	               Meaning
+Subject	                 Sends updates
+Observer	             Receives updates
+Concrete Subject	     Actual object being observed
+Concrete Observer	     Actual subscribers/listeners
+
 🌍 Real-World Examples
+
 YouTube Notifications
 Instagram Followers
 Stock Market Updates

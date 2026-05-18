@@ -1,0 +1,269 @@
+🎁 Decorator Design Pattern
+📌 Definition
+
+👉 Decorator Pattern allows you to add new behavior/features to an object dynamically without changing its original code.
+
+In simple words:
+
+Add extra features to an object at runtime like wrapping gifts 🎁 layer by layer.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine you order a pizza 🍕
+
+Base pizza:
+
+Cheese Pizza
+
+Now you add:
+
+Extra Cheese
+Olives
+Mushroom
+
+👉 Pizza remains same
+👉 Features keep getting added dynamically
+
+This is exactly Decorator Pattern.
+
+🎯 Main Idea
+
+Instead of creating many subclasses:
+
+❌ Bad:
+
+CheesePizza
+CheeseOlivePizza
+CheeseOliveMushroomPizza
+CheeseMushroomPizza
+
+👉 Explosion of classes 😵
+
+✅ Better:
+
+Wrap object with decorators dynamically
+🧱 Core Components
+Component	Role
+Component	Common interface
+Concrete Component	Original object
+Decorator	Wrapper class
+Concrete Decorator	Adds new behavior
+🍕 Real-World Pizza Example
+Step 1️⃣ Component Interface
+interface Pizza {
+    String getDescription();
+    int getCost();
+}
+Step 2️⃣ Concrete Component
+class BasicPizza implements Pizza {
+
+    public String getDescription() {
+        return "Basic Pizza";
+    }
+
+    public int getCost() {
+        return 100;
+    }
+}
+Step 3️⃣ Abstract Decorator
+abstract class PizzaDecorator implements Pizza {
+
+    protected Pizza pizza;
+
+    PizzaDecorator(Pizza pizza) {
+        this.pizza = pizza;
+    }
+
+    public String getDescription() {
+        return pizza.getDescription();
+    }
+
+    public int getCost() {
+        return pizza.getCost();
+    }
+}
+Step 4️⃣ Concrete Decorators
+Extra Cheese Decorator
+class ExtraCheese extends PizzaDecorator {
+
+    ExtraCheese(Pizza pizza) {
+        super(pizza);
+    }
+
+    public String getDescription() {
+        return pizza.getDescription() + ", Extra Cheese";
+    }
+
+    public int getCost() {
+        return pizza.getCost() + 40;
+    }
+}
+Mushroom Decorator
+class Mushroom extends PizzaDecorator {
+
+    Mushroom(Pizza pizza) {
+        super(pizza);
+    }
+
+    public String getDescription() {
+        return pizza.getDescription() + ", Mushroom";
+    }
+
+    public int getCost() {
+        return pizza.getCost() + 30;
+    }
+}
+Step 5️⃣ Main Class
+public class Main {
+
+    public static void main(String[] args) {
+
+        Pizza pizza = new BasicPizza();
+
+        pizza = new ExtraCheese(pizza);
+
+        pizza = new Mushroom(pizza);
+
+        System.out.println(pizza.getDescription());
+        System.out.println("Total Cost: ₹" + pizza.getCost());
+    }
+}
+✅ Output
+Basic Pizza, Extra Cheese, Mushroom
+Total Cost: ₹170
+🔥 What Happened Internally?
+BasicPizza
+    ↓ wrapped by
+ExtraCheese
+    ↓ wrapped by
+Mushroom
+
+👉 Each decorator adds functionality without modifying original object.
+
+🎯 Why Use Decorator Pattern?
+
+Suppose you build classes using inheritance:
+
+Pizza
+ ├── CheesePizza
+ ├── MushroomPizza
+ ├── CheeseMushroomPizza
+ ├── CheeseOlivePizza
+ ├── CheeseOliveMushroomPizza
+
+😵 Too many combinations.
+
+Decorator solves this by:
+✔ Runtime feature addition
+✔ Flexible composition
+✔ Avoiding subclass explosion
+
+🌍 Real-World Applications
+1️⃣ Coffee Shops ☕
+
+Base coffee:
+
+Espresso
+
+Decorators:
+
+Milk
+Sugar
+Whipped Cream
+2️⃣ Java I/O Streams 🚀
+
+Real Java example:
+
+BufferedReader br =
+    new BufferedReader(
+        new FileReader("file.txt"));
+
+👉 FileReader wrapped by BufferedReader
+
+Decorator Pattern internally.
+
+3️⃣ Spring Boot Security
+Request
+   ↓
+Authentication Filter
+   ↓
+Authorization Filter
+   ↓
+Logging Filter
+
+Each layer decorates request processing.
+
+🧠 Important Characteristics
+✔ HAS-A Relationship
+
+Decorator:
+
+protected Pizza pizza;
+
+👉 Uses composition
+
+✔ Same Interface
+
+Both:
+
+Component
+Decorator
+
+implement same interface.
+
+So decorators are interchangeable.
+
+⚡ Decorator vs Inheritance
+Inheritance	Decorator
+Static behavior	Dynamic behavior
+Class explosion	Flexible composition
+Compile-time	Runtime
+Tight coupling	Loose coupling
+🔥 Decorator vs Strategy (Important)
+Decorator	Strategy
+Adds new functionality	Changes algorithm
+Wraps object	Replaces behavior
+Layer-based enhancement	Behavior selection
+🎯 When to Use Decorator Pattern?
+
+Use it when:
+
+✔ You want runtime feature addition
+✔ Avoid subclass explosion
+✔ Need flexible combinations
+✔ Want composition over inheritance
+
+⚠️ Drawbacks
+
+❌ Many small classes
+❌ Can become difficult to debug
+❌ Deep wrapping may increase complexity
+
+🧠 Interview-Level Internal Flow
+Client
+   ↓
+Decorator
+   ↓
+Decorator
+   ↓
+Concrete Component
+
+Each decorator:
+
+forwards call
+adds behavior before/after
+🎯 Interview One-Liner
+
+👉
+“Decorator Pattern dynamically adds responsibilities to objects using composition instead of inheritance.”
+
+⚡ Memory Trick
+
+👉 Decorator = Wrapper adding features dynamically
+
+🚀 Key SOLID Principles Used
+
+✔ Open/Closed Principle
+✔ Single Responsibility Principle
+✔ Composition over Inheritance
+✔ Dependency Inversion Principle
