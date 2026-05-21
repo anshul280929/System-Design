@@ -1,0 +1,296 @@
+🎮 Command Design Pattern
+📌 Definition
+
+👉 Command Pattern converts a request into an object so that requests can be passed, stored, queued, logged, or undone.
+
+In simple words:
+
+Instead of directly doing an action, we wrap the action inside a command object.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine a TV Remote 📺
+
+When you press:
+
+Power button
+Volume button
+Mute button
+
+👉 Remote does NOT know:
+
+how TV turns on
+how volume changes internally
+
+It just sends a command:
+
+“Execute this action”
+
+That is the Command Pattern.
+
+🎯 Main Idea
+
+Instead of:
+
+tv.turnOn();
+
+we do:
+
+command.execute();
+
+👉 Action becomes an object.
+
+🌍 Real-World Applications
+TV Remote
+Undo/Redo in editors
+Queue systems
+Task schedulers
+Job queues
+Transaction processing
+Menu actions in GUI
+🧱 Components of Command Pattern
+Component	Role
+Command	Interface for executing action
+Concrete Command	Actual command implementation
+Receiver	Object that performs work
+Invoker	Triggers command
+Client	Creates and connects everything
+📺 Real-World Example: Smart TV Remote
+Step 1️⃣ Receiver (Actual Device)
+class Television {
+
+    public void turnOn() {
+        System.out.println("TV is ON");
+    }
+
+    public void turnOff() {
+        System.out.println("TV is OFF");
+    }
+}
+🧠 Receiver Meaning
+
+👉 Receiver contains actual business logic.
+
+TV knows HOW to:
+
+turn on
+turn off
+Step 2️⃣ Command Interface
+interface Command {
+    void execute();
+}
+🧠 Why Interface?
+
+Because all commands should behave similarly:
+
+execute()
+Step 3️⃣ Concrete Commands
+Turn ON Command
+class TurnOnCommand implements Command {
+
+    private Television tv;
+
+    TurnOnCommand(Television tv) {
+        this.tv = tv;
+    }
+
+    public void execute() {
+        tv.turnOn();
+    }
+}
+Turn OFF Command
+class TurnOffCommand implements Command {
+
+    private Television tv;
+
+    TurnOffCommand(Television tv) {
+        this.tv = tv;
+    }
+
+    public void execute() {
+        tv.turnOff();
+    }
+}
+🧠 What’s Happening?
+
+Each command:
+
+stores receiver (Television)
+wraps action into object
+Step 4️⃣ Invoker (Remote Control)
+class RemoteControl {
+
+    private Command command;
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    public void pressButton() {
+        command.execute();
+    }
+}
+🧠 Invoker Meaning
+
+Remote:
+
+doesn’t know TV internals
+just triggers command
+Step 5️⃣ Client/Main
+public class Main {
+
+    public static void main(String[] args) {
+
+        Television tv = new Television();
+
+        Command onCommand = new TurnOnCommand(tv);
+        Command offCommand = new TurnOffCommand(tv);
+
+        RemoteControl remote = new RemoteControl();
+
+        remote.setCommand(onCommand);
+        remote.pressButton();
+
+        remote.setCommand(offCommand);
+        remote.pressButton();
+    }
+}
+✅ Output
+TV is ON
+TV is OFF
+🔥 Internal Flow
+Client
+   ↓
+Creates Command
+   ↓
+Invoker (Remote)
+   ↓ execute()
+Concrete Command
+   ↓
+Receiver (TV)
+🎯 Why Use Command Pattern?
+
+Suppose remote directly controls TV:
+
+if(button == ON)
+    tv.turnOn();
+
+As features increase:
+
+Fan
+AC
+Lights
+Speaker
+
+👉 Huge messy logic 😵
+
+Command Pattern solves this by:
+✔ Encapsulating actions
+✔ Decoupling sender from receiver
+
+🚀 Major Advantages
+1️⃣ Loose Coupling
+
+Remote doesn’t know TV internals.
+
+2️⃣ Undo/Redo Support
+
+Since actions are objects:
+
+store history
+reverse actions
+
+Example:
+
+Ctrl + Z
+3️⃣ Queueing Commands
+
+Commands can be:
+
+queued
+scheduled
+delayed
+
+Example:
+
+task scheduler
+4️⃣ Macro Commands
+
+Execute multiple commands together.
+
+Example:
+
+“Movie Mode”
+Dim lights
+Turn on TV
+Start speakers
+🔥 Real-World Enterprise Use Cases
+🏦 Banking System
+
+Commands:
+
+WithdrawCommand
+DepositCommand
+TransferCommand
+🎮 Game Engines
+
+Commands:
+
+Jump
+Attack
+Move
+🖥️ Text Editor
+
+Commands:
+
+Copy
+Paste
+Undo
+🚚 Queue Systems
+
+Commands stored and processed later.
+
+⚠️ Drawbacks
+
+❌ Many command classes
+❌ Increased complexity for small systems
+
+🎯 Command vs Strategy (Very Important)
+Command	Strategy
+Encapsulates request/action	Encapsulates algorithm
+Focus on execution	Focus on behavior
+Can support undo/queue	Changes logic dynamically
+Example: Remote button	Example: Payment method
+🎯 Command vs Observer
+Command	Observer
+One object triggers action	One-to-many notifications
+Explicit execution	Automatic updates
+🧠 SOLID Principles Used
+
+✔ Open/Closed Principle
+✔ Single Responsibility Principle
+✔ Dependency Inversion Principle
+
+🎯 Interview One-Liner
+
+👉
+“Command Pattern encapsulates a request as an object, allowing parameterization, queuing, logging, and undoable operations.”
+
+⚡ Memory Trick
+
+👉 Command = Action wrapped inside object
+
+🚀 Advanced Thought
+
+This line:
+
+command.execute();
+
+is powerful because:
+👉 invoker does not care:
+
+WHAT command
+HOW it works
+WHO executes it
+
+That’s the beauty of decoupling.
