@@ -1,0 +1,284 @@
+🔌 Adapter Design Pattern
+📌 Definition
+
+👉 Adapter Pattern allows two incompatible interfaces to work together.
+
+In simple words:
+
+It acts like a translator between two objects that cannot communicate directly.
+
+🧠 Think Like a 10-Year-Old
+
+Suppose:
+
+Your laptop charger has a Type-C connector.
+The wall socket only accepts a 2-pin plug.
+
+Can you connect directly?
+
+❌ No.
+
+You use an adapter.
+
+Laptop Charger ---> Adapter ---> Wall Socket
+
+The adapter translates one interface into another.
+
+This is exactly the Adapter Pattern.
+
+🌍 Real-World Examples
+1. Phone Charger
+Phone Charger
+      ↓
+Power Adapter
+      ↓
+Wall Socket
+2. Card Reader
+Laptop
+    ↓
+Card Reader (Adapter)
+    ↓
+SD Card
+3. Payment Gateway
+
+Suppose your application expects:
+
+pay(amount)
+
+But a third-party library provides:
+
+makePayment(value)
+
+Adapter converts one interface to another.
+
+🎯 When Do We Use Adapter Pattern?
+
+Use it when:
+
+✔ Existing class has useful functionality
+✔ Interface doesn't match what client expects
+✔ You cannot modify third-party code
+✔ Need to integrate legacy systems
+
+Example: Mobile Charging
+Step 1️⃣ Target Interface
+
+This is what our application expects.
+
+interface Charger {
+    void charge();
+}
+Step 2️⃣ Adaptee (Incompatible Class)
+
+Suppose this comes from a third-party library.
+
+class TypeCCharger {
+
+    void chargeWithTypeC() {
+        System.out.println("Charging using Type-C charger");
+    }
+}
+
+Notice:
+
+Application expects:
+
+charge()
+
+But library provides:
+
+chargeWithTypeC()
+
+Interfaces don't match ❌
+
+Step 3️⃣ Adapter
+class ChargerAdapter implements Charger {
+
+    private TypeCCharger charger;
+
+    ChargerAdapter(TypeCCharger charger) {
+        this.charger = charger;
+    }
+
+    @Override
+    public void charge() {
+        charger.chargeWithTypeC();
+    }
+}
+🧠 What is happening?
+
+When someone calls:
+
+charge()
+
+Adapter internally calls:
+
+chargeWithTypeC()
+
+It translates one interface into another.
+
+Step 4️⃣ Client
+public class Main {
+
+    public static void main(String[] args) {
+
+        TypeCCharger typeC = new TypeCCharger();
+
+        Charger charger =
+                new ChargerAdapter(typeC);
+
+        charger.charge();
+    }
+}
+✅ Output
+Charging using Type-C charger
+🔥 Internal Flow
+Client
+   ↓ charge()
+Charger Interface
+   ↓
+ChargerAdapter
+   ↓ chargeWithTypeC()
+TypeCCharger
+🎯 Why not call TypeCCharger directly?
+
+Without adapter:
+
+TypeCCharger charger =
+        new TypeCCharger();
+
+charger.chargeWithTypeC();
+
+Now client depends directly on:
+
+TypeCCharger
+
+Suppose tomorrow:
+
+LightningCharger
+
+comes.
+
+You must modify client code ❌
+
+✅ With Adapter
+
+Client only knows:
+
+Charger
+
+Tomorrow:
+
+class LightningAdapter
+        implements Charger
+
+No client changes needed.
+
+🌍 Real Enterprise Example
+
+Suppose your application expects:
+
+interface PaymentGateway {
+    void pay(double amount);
+}
+
+But third-party SDK provides:
+
+class RazorpaySDK {
+    void makePayment(double amount) {
+        System.out.println("Payment successful");
+    }
+}
+Adapter
+class RazorpayAdapter
+        implements PaymentGateway {
+
+    private RazorpaySDK sdk;
+
+    RazorpayAdapter(RazorpaySDK sdk) {
+        this.sdk = sdk;
+    }
+
+    @Override
+    public void pay(double amount) {
+        sdk.makePayment(amount);
+    }
+}
+Client
+PaymentGateway gateway =
+        new RazorpayAdapter(
+                new RazorpaySDK());
+
+gateway.pay(5000);
+🔥 This is how payment providers are often integrated in real systems.
+🎯 Structure
+Client
+   ↓
+Target Interface
+   ↓
+Adapter
+   ↓
+Adaptee
+🧠 Why Composition?
+
+Notice:
+
+private TypeCCharger charger;
+
+Adapter HAS-A adaptee.
+
+It uses:
+
+Composition
+
+instead of inheritance.
+
+⚡ Benefits
+✅ Reuse existing code
+
+No modification needed.
+
+✅ Loose coupling
+
+Client depends on abstraction.
+
+✅ Integrate third-party libraries
+
+Very common in enterprise systems.
+
+✅ Follows Open/Closed Principle
+
+Add new adapters without changing existing code.
+
+⚠️ Drawbacks
+
+❌ More classes
+❌ Additional layer of indirection
+
+🎯 Adapter vs Decorator (Common Interview Question)
+Adapter	Decorator
+Changes interface	Adds functionality
+Translator	Wrapper
+Makes incompatible classes work together	Enhances object behavior
+Example: Charger adapter	Pizza toppings
+🎯 Adapter vs Facade
+Adapter	Facade
+Converts interface	Simplifies interface
+One incompatible object	Entire subsystem
+Translator	Simplifier
+🎯 Interview One-Liner
+
+👉
+
+"Adapter Pattern converts one interface into another interface that the client expects, allowing incompatible classes to work together."
+
+⚡ Memory Trick
+
+Adapter = Translator 🔄
+
+Client speaks English
+Library speaks French
+
+Adapter = Translator
+
+Both communicate successfully because of the adapter.
