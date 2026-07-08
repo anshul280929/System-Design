@@ -1,0 +1,375 @@
+🏢 Facade Design Pattern
+📌 Definition
+
+👉 Facade Pattern provides a simplified, unified interface to a complex subsystem.
+
+In simple words:
+
+Instead of talking to 10 different objects yourself, you talk to one object (Facade), and it coordinates everything.
+
+🧠 Think Like a 10-Year-Old
+
+Imagine you want to watch a movie at home.
+
+Without a facade, you would have to:
+
+Turn on TV
+Turn on speakers
+Turn on streaming device
+Connect Wi-Fi
+Open Netflix
+Select HDMI
+Adjust volume
+
+😫 Too many steps.
+
+Instead, you press one button:
+
+Watch Movie
+
+Behind the scenes, everything happens automatically.
+
+That one button is the Facade.
+
+🎯 Why Do We Need a Facade?
+
+Suppose you have these classes:
+
+DVDPlayer
+Projector
+SoundSystem
+Lights
+Screen
+
+If the client directly controls them:
+
+dvd.on();
+projector.on();
+screen.down();
+lights.dim();
+sound.on();
+dvd.play();
+
+Problems:
+
+❌ Client knows too much
+
+❌ Client becomes tightly coupled
+
+❌ If subsystem changes, client changes
+
+Instead:
+
+homeTheater.watchMovie();
+
+Much cleaner.
+
+🎬 Real-World Example: Home Theater
+Step 1: Subsystem Classes
+TV
+class TV {
+
+    void on() {
+        System.out.println("TV ON");
+    }
+}
+Speaker
+class Speaker {
+
+    void on() {
+        System.out.println("Speaker ON");
+    }
+}
+Streaming Device
+class StreamingDevice {
+
+    void playMovie() {
+        System.out.println("Playing Movie...");
+    }
+}
+Step 2: Facade
+class HomeTheaterFacade {
+
+    private TV tv;
+    private Speaker speaker;
+    private StreamingDevice device;
+
+    HomeTheaterFacade() {
+        tv = new TV();
+        speaker = new Speaker();
+        device = new StreamingDevice();
+    }
+
+    public void watchMovie() {
+
+        tv.on();
+        speaker.on();
+        device.playMovie();
+    }
+}
+Step 3: Client
+public class Main {
+
+    public static void main(String[] args) {
+
+        HomeTheaterFacade theater =
+                new HomeTheaterFacade();
+
+        theater.watchMovie();
+    }
+}
+Output
+TV ON
+Speaker ON
+Playing Movie...
+🎯 Internal Flow
+Client
+   │
+   ▼
+HomeTheaterFacade
+   │
+   ├────────► TV
+   ├────────► Speaker
+   └────────► Streaming Device
+
+The client talks to only one object.
+
+🌍 Real-World Example: Food Delivery App
+
+Without Facade:
+
+RestaurantService
+PaymentService
+CouponService
+DeliveryService
+NotificationService
+
+Client:
+
+restaurant.placeOrder();
+
+payment.pay();
+
+coupon.apply();
+
+delivery.assign();
+
+notification.send();
+
+Very complex.
+
+With Facade:
+
+orderFacade.placeOrder();
+
+Internally:
+
+Place Order
+      │
+      ▼
+Restaurant
+      │
+      ▼
+Payment
+      │
+      ▼
+Delivery
+      │
+      ▼
+Notification
+
+One call does everything.
+
+🎯 Principle of Least Knowledge (Law of Demeter)
+📌 Definition
+
+👉
+
+A class should know as little as possible about other classes.
+
+In simple words:
+
+Talk only to your close friends, not strangers.
+
+🧠 Think Like a 10-Year-Old
+
+Suppose your mother tells you:
+
+"Tell your teacher I will be late."
+
+You go directly to your teacher.
+
+✅ Good.
+
+Instead, imagine:
+
+Mom
+ ↓
+Neighbor
+ ↓
+Bus Driver
+ ↓
+Principal
+ ↓
+Teacher
+
+😵 Too many people involved.
+
+The same idea applies in software.
+
+🚨 Bad Example
+
+Suppose:
+
+class Car {
+
+    Engine engine;
+
+    Engine getEngine() {
+        return engine;
+    }
+}
+
+Client:
+
+car.getEngine()
+   .getPiston()
+   .getCylinder()
+   .start();
+
+The client knows:
+
+Engine
+Piston
+Cylinder
+
+Too much knowledge.
+
+If Engine changes:
+
+Everything breaks.
+
+✅ Better Design
+
+Inside Car:
+
+class Car {
+
+    Engine engine;
+
+    void start() {
+        engine.start();
+    }
+}
+
+Client:
+
+car.start();
+
+Much cleaner.
+
+🎯 How Facade Helps Principle of Least Knowledge
+
+Without Facade:
+
+Client
+  │
+  ├── TV
+  ├── Speaker
+  ├── DVD
+  ├── Lights
+  ├── Projector
+
+Client knows five different classes.
+
+With Facade:
+
+Client
+   │
+   ▼
+Facade
+   │
+   ├── TV
+   ├── Speaker
+   ├── DVD
+   ├── Lights
+
+Client knows only:
+
+Facade
+
+That's exactly what the Principle of Least Knowledge recommends.
+
+🔥 Why Is This Better?
+
+Suppose tomorrow:
+
+DVD removed
+
+↓
+
+Netflix added
+
+Only:
+
+HomeTheaterFacade
+
+changes.
+
+Client remains:
+
+theater.watchMovie();
+
+No changes.
+
+🎯 Benefits of Facade
+
+✅ Simplifies complex systems
+
+✅ Reduces dependencies
+
+✅ Loose coupling
+
+✅ Better readability
+
+✅ Easier maintenance
+
+✅ Hides subsystem complexity
+
+⚠️ Drawbacks
+
+❌ Facade can become very large if it tries to do everything (sometimes called a "God Facade").
+
+❌ Clients that need advanced subsystem features may still have to access subsystem classes directly.
+
+🔥 Facade vs Adapter (Interview Question)
+Facade	Adapter
+Simplifies interface	Converts interface
+Hides complexity	Makes incompatible interfaces compatible
+Works with subsystem	Works with incompatible classes
+Example: watchMovie()	Charger adapter
+🔥 Facade vs Decorator
+Facade	Decorator
+Simplifies access	Adds functionality
+New unified interface	Same interface with extra behavior
+Doesn't change object behavior	Enhances object behavior
+🎯 SOLID Principles Used
+
+Facade naturally supports several SOLID ideas:
+
+Single Responsibility Principle (SRP): The facade coordinates subsystem interactions, so the client doesn't have to.
+Dependency Inversion Principle (DIP): The client depends on the facade instead of many concrete subsystem classes.
+Open/Closed Principle (OCP): You can often extend or replace subsystem implementations with changes confined to the facade.
+🎯 Interview One-Liner
+
+Facade Pattern provides a simple interface to a complex subsystem, reducing coupling between the client and subsystem classes. It supports the Principle of Least Knowledge by ensuring the client communicates with only one object instead of many interconnected objects.
+
+🧠 Memory Trick
+Adapter = Translator (changes one interface into another)
+Decorator = Enhancer (adds new behavior)
+Facade = Reception Desk (one place to access many services)
+
+Think of a hotel:
+
+You don't call housekeeping, the kitchen, security, and laundry separately.
+You call the front desk (facade), and it coordinates everything behind the scenes. That's exactly how the Facade Pattern simplifies interaction while keeping the client isolated from the complexity of the system.
